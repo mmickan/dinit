@@ -82,6 +82,9 @@ With `dinit -submit` you can easily access this functionality:
   this does nothing.
 * `start`: run a command when starting up. On any failure, `dinit` exits. The
   complete command must be given as one string, enclosed with quotes.
+* `prestop`: run command before passing SIGTERM on to child process(es).
+* `prestoptimer`: time in seconds before SIGTERM is sent after the prestop
+  command has been started.
 * `stop`: run command on exit. The complete command must be given as one string,
   enclosed with quotes.
 * `timeout`: time in seconds before SIGKILL is sent after the SIGTERM has been
@@ -116,6 +119,8 @@ The following environment variables are used by dinit:
 
 * DINIT_TIMEOUT: default value to use for timeout.
 * DINIT_START: command to run during startup.
+* DINIT_PRESTOP: command to run before teardown.
+* DINIT_PRESTOPTIMER: seconds to wait before passing on TERM signal.
 * DINIT_STOP: command to run during teardown.
 * GOMAXPROCS: the GOMAXPROCS for Go programs.
 

@@ -83,6 +83,19 @@ func (c *Procs) Signal(sig os.Signal) {
 
 // Cleanup will send signal sig to the processes and after a short time send a SIGKKILL.
 func (c *Procs) Cleanup(sig os.Signal) {
+	if prestop != "" {
+		prestopcmd := command(prestop)
+		if err := prestopcmd.Start(); err != nil {
+			lg.Fatalf("prestop command failed to start: %v", err)
+		}
+		pid := prestopcmd.Process.Pid
+		if test.Test() {
+			pid = testPid
+		}
+		lg.Printf("pid %d started: %v", pid, prestopcmd.Args)
+		time.Sleep(prestoptimer)
+	}
+
 	procs.Signal(sig)
 
 	time.Sleep(2 * time.Second)

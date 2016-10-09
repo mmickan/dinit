@@ -20,6 +20,8 @@ var (
 
 	timeout       time.Duration
 	maxproc       float64
+	prestop       string
+	prestoptimer  time.Duration
 	start, stop   string
 	primary, sock bool
 	version       bool
@@ -48,6 +50,8 @@ func main() {
 	flag.DurationVar(&timeout, "timeout", envDuration("$DINIT_TIMEOUT", 10*time.Second), "time in seconds between SIGTERM and SIGKILL (DINIT_TIMEOUT)")
 	flag.Float64Var(&maxproc, "maxproc", 0.0, "set GOMAXPROCS to runtime.NumCPU() * maxproc, when GOMAXPROCS already set use that")
 	flag.Float64Var(&maxproc, "core-fraction", 0.0, "set GOMAXPROCS to runtime.NumCPU() * core-fraction, when GOMAXPROCS already set use that")
+	flag.StringVar(&prestop, "prestop", envString("$DINIT_PRESTOP", ""), "command to run before teardown (DINIT_PRESTOP)")
+	flag.DurationVar(&prestoptimer, "prestoptimer", envDuration("$DINIT_PRESTOPTIMER", 10*time.Second), "time in seconds between running prestop command and killing processes (DINIT_PRESTOPTIMER)")
 	flag.StringVar(&start, "start", envString("$DINIT_START", ""), "command to run during startup, non-zero exit status aborts dinit (DINIT_START)")
 	flag.StringVar(&stop, "stop", envString("$DINIT_STOP", ""), "command to run during teardown (DINIT_STOP)")
 	flag.BoolVar(&sock, "submit", false, "write -r CMD... to the unix socket "+socketName)
